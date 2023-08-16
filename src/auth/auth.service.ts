@@ -8,18 +8,25 @@ export class AuthService {
   constructor(
     private userService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
-  async signIn(signInDto: SignInDto): Promise<User> {
+  async validateUser(signInDto: SignInDto): Promise<User | null> {
     const { username, password } = signInDto;
     const user = await this.userService.findOne(username);
-    if (user?.password !== password) {
-      throw new UnauthorizedException();
+    if (user && user.password === password) {
+      return user;
     }
+    return null;
+  }
 
-    const payload = { sub: user.userId, username: user.username };
-    return {
-      access_token: await this.jwtService.signAsync(payload),
-    };
+  async login(signInDto: SignInDto): Promise<{ access_token: string }> {
+    const user = await this.validateUser(signInDto);
+    if (user) {
+      const payload = { username: user.username, sub: user.userId };
+      return {
+        access_token: this.jwtService.sign(payload),
+      };
+    }
+    throw new UnauthorizedException();
   }
 }
