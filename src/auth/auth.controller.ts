@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/signIn.dto';
-import { User } from 'src/users/users.service';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {

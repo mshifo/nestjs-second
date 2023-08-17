@@ -1,32 +1,32 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { User, UsersService } from 'src/users/users.service';
 import { SignInDto } from './dto/signIn.dto';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/users/entities/user.entity';
+import { UserRepository } from 'src/users/users.repository';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UsersService,
+    @InjectRepository(UserRepository) private userRepository: UserRepository,
     private jwtService: JwtService,
   ) { }
 
-  async validateUser(signInDto: SignInDto): Promise<User | null> {
+  async validateUser(signInDto: SignInDto): Promise<User> {
     const { username, password } = signInDto;
-    const user = await this.userService.findOne(username);
-    if (user && user.password === password) {
+    const user = await this.userRepository.findOneBy({ username });
+    if (user && user.validatePassword(password)) {
       return user;
     }
-    return null;
+    throw new UnauthorizedException('User with given credentials not found!');
   }
 
   async login(signInDto: SignInDto): Promise<{ access_token: string }> {
     const user = await this.validateUser(signInDto);
-    if (user) {
-      const payload = { username: user.username, sub: user.userId };
-      return {
-        access_token: this.jwtService.sign(payload),
-      };
-    }
-    throw new UnauthorizedException();
+
+    const payload = { username: user.username, sub: user.id };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }
