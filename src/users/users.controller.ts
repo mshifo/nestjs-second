@@ -13,7 +13,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { UserStatusValidationPipe } from './pipes/status.validation.pipe';
+import { UserStatusValidationPipe } from './pipes/status-validation.pipe';
 
 @Controller('users')
 @UseGuards(AuthGuard())

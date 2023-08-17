@@ -1,4 +1,4 @@
-import { UserStatusValidationPipe } from './status.validation.pipe';
+import { UserStatusValidationPipe } from './status-validation.pipe';
 
 describe('Pipe', () => {
   it('should be defined', () => {

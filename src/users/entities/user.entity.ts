@@ -1,32 +1,40 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { UserStatuses } from '../enums/user-status.enum';
 @Entity({ name: 'users' })
+@Unique(['username', 'email'])
 export class User {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
-  @Column({ unique: true })
+  @Column()
   username: string;
 
   @Column()
   password: string;
 
-  @Column()
+  @Column({ length: 99 })
   name: string;
 
-  @Column({ unique: true })
+  @Column()
   email: string;
 
   @Column()
   phone: string;
 
-  @Column()
+  @Column({ default: UserStatuses.NOT_ACTIVE })
   status: string;
 
   @Column()
   salt: string;
 
-  @Column()
+  @CreateDateColumn()
   createdAt: Date;
 
   async validatePassword(password: string): Promise<boolean> {
