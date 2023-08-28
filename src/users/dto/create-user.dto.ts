@@ -16,7 +16,4 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   phone: string;
-
-  @IsNotEmpty()
-  status: string;
 }
