@@ -7,15 +7,21 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { UserStatuses } from '../enums/user-status.enum';
+import { Exclude } from 'class-transformer';
+import { MinLength } from 'class-validator';
 @Entity({ name: 'users' })
 export class User {
+  static passwordMinLength = 8;
+
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
   @Column({ unique: true })
   username: string;
 
-  @Column()
+  @MinLength(User.passwordMinLength)
+  @Exclude({ toPlainOnly: true })
+  @Column({ select: false })
   password: string;
 
   @Column({ length: 99 })
@@ -30,7 +36,8 @@ export class User {
   @Column({ default: UserStatuses.NOT_ACTIVE })
   status: string;
 
-  @Column()
+  @Exclude({ toPlainOnly: true })
+  @Column({ select: false })
   salt: string;
 
   @CreateDateColumn()
