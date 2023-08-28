@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -15,7 +16,7 @@ export class AuthService {
   constructor(
     @InjectRepository(UserRepository) private userRepository: UserRepository,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async validateUser(signInDto: SignInDto): Promise<User> {
     const { username, password } = signInDto;
@@ -48,7 +49,10 @@ export class AuthService {
     try {
       await this.userRepository.save(user);
     } catch (error) {
-      throw new ConflictException(error.message);
+      if (error.code == 'ER_DUP_ENTRY') {
+        throw new ConflictException('Username or Email already exists');
+      }
+      throw new InternalServerErrorException(error.message);
     }
   }
 

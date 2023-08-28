@@ -3,17 +3,15 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { UserStatuses } from '../enums/user-status.enum';
 @Entity({ name: 'users' })
-@Unique(['username', 'email'])
 export class User {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   username: string;
 
   @Column()
@@ -22,7 +20,7 @@ export class User {
   @Column({ length: 99 })
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()

@@ -8,6 +8,7 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  Logger,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -18,6 +19,7 @@ import { UserStatusValidationPipe } from './pipes/status-validation.pipe';
 @Controller('users')
 @UseGuards(AuthGuard())
 export class UsersController {
+  private readonly logger = new Logger(UsersController.name);
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
@@ -27,6 +29,7 @@ export class UsersController {
 
   @Get()
   findAll() {
+    this.logger.verbose('fetching users data');
     return this.usersService.findAll();
   }
 
