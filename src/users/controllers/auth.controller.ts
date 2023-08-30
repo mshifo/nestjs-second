@@ -6,15 +6,14 @@ import {
   HttpStatus,
   Post,
   Request,
-  Session,
   UseGuards,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { SignInDto } from './dto/signIn.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/users/entities/user.entity';
-import { SignUpDto } from './dto/SignUp.dto';
 import { UserRepository } from 'src/users/users.repository';
+import { AuthService } from '../services/auth.service';
+import { SignInDto } from '../dto/signIn.dto';
+import { SignUpDto } from '../dto/SignUp.dto';
 
 @Controller('auth')
 export class AuthController {
