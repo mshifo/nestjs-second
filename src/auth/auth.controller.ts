@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Post,
   Request,
+  Session,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -14,13 +15,14 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/users/entities/user.entity';
 import { SignUpDto } from './dto/SignUp.dto';
 import { UserRepository } from 'src/users/users.repository';
+import { session } from 'passport';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
     private userRepository: UserRepository,
-  ) {}
+  ) { }
 
   @HttpCode(HttpStatus.OK)
   @Post('sign-in')
@@ -38,5 +40,10 @@ export class AuthController {
   @UseGuards(AuthGuard())
   getProfile(@Request() req): User {
     return req.user;
+  }
+
+  @Get()
+  async getAuthSession(@Session() session: Record<string, any>) {
+    console.log(session);
   }
 }
