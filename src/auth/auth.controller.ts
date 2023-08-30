@@ -15,7 +15,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/users/entities/user.entity';
 import { SignUpDto } from './dto/SignUp.dto';
 import { UserRepository } from 'src/users/users.repository';
-import { session } from 'passport';
 
 @Controller('auth')
 export class AuthController {
@@ -40,10 +39,5 @@ export class AuthController {
   @UseGuards(AuthGuard())
   getProfile(@Request() req): User {
     return req.user;
-  }
-
-  @Get()
-  async getAuthSession(@Session() session: Record<string, any>) {
-    console.log(session);
   }
 }

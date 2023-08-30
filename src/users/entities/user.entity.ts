@@ -36,8 +36,7 @@ export class User {
   @Column({ default: UserStatuses.NOT_ACTIVE })
   status: string;
 
-  @Exclude({ toPlainOnly: true })
-  @Column({ select: false })
+  @Column()
   salt: string;
 
   @CreateDateColumn()
