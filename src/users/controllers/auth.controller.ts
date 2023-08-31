@@ -10,17 +10,13 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/users/entities/user.entity';
-import { UserRepository } from 'src/users/users.repository';
 import { AuthService } from '../services/auth.service';
 import { SignInDto } from '../dto/signIn.dto';
 import { SignUpDto } from '../dto/SignUp.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private userRepository: UserRepository,
-  ) { }
+  constructor(private authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('sign-in')
@@ -35,7 +31,7 @@ export class AuthController {
   }
 
   @Get('profile')
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard('jwt'))
   getProfile(@Request() req): User {
     return req.user;
   }

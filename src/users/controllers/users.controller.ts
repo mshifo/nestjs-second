@@ -16,7 +16,7 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 
 @Controller('users')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 export class UsersController {
   private readonly logger = new Logger(UsersController.name);
   constructor(private readonly usersService: UsersService) {}
