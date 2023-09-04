@@ -14,7 +14,7 @@ export class User {
   static passwordMinLength = 8;
 
   @PrimaryGeneratedColumn({ type: 'bigint' })
-  id: number;
+  id?: number;
 
   @Column({ unique: true })
   username: string;
@@ -34,18 +34,18 @@ export class User {
   phone: string;
 
   @Column({ default: UserStatuses.NOT_ACTIVE })
-  status: string;
+  status?: string;
 
   @Column()
-  salt: string;
+  salt?: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @DeleteDateColumn()
-  deletedAt: Date;
+  deletedAt?: Date;
 
-  async validatePassword(password: string): Promise<boolean> {
+  async validatePassword?(password: string): Promise<boolean> {
     const hash = bcrypt.hash(password, this.salt);
     return hash === this.password;
   }

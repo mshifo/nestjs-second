@@ -17,13 +17,13 @@ export class UsersService {
     @InjectRepository(UserRepository) private userRepository: UserRepository,
   ) { }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const newUser = this.userRepository.create({
       ...createUserDto,
       salt: await bcrypt.genSalt(),
     });
     try {
-      this.userRepository.save(newUser);
+      return this.userRepository.save(newUser);
     } catch (error) {
       if (error.code === 'ER_DUP_ENTRY') {
         throw new ConflictException('Username or Email already exists');
