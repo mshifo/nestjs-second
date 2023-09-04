@@ -1,6 +1,11 @@
-import { IsNotEmpty, IsEmail } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsOptional } from 'class-validator';
+import { UserStatuses } from '../enums/user-status.enum';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateUserDto {
+  /**
+   * User Full Name
+   */
   @IsNotEmpty()
   name: string;
 
@@ -16,4 +21,8 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   phone: string;
+
+  @IsOptional()
+  @ApiPropertyOptional()
+  status: UserStatuses;
 }
