@@ -1,4 +1,6 @@
 export default () => ({
+  NODE_ENV: process.env.NODE_ENV,
+  port: process.env.PORT,
   database: {
     type: 'mysql',
     host: process.env.DB_HOST,
