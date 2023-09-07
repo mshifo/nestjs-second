@@ -1,4 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Seeder {
@@ -7,4 +12,7 @@ export class Seeder {
 
   @Column({ unique: true })
   name: string;
+
+  @CreateDateColumn()
+  createdAt?: Date;
 }
