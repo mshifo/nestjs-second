@@ -18,7 +18,7 @@
     "test:cov": "NODE_ENV=testing jest --coverage",
     "test:debug": "NODE_ENV=testing node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "NODE_ENV=testing jest --config ./test/jest-e2e.json",
-    "db:seed": "npx ts-node ./node_modules/typeorm-seeding/dist/cli.js seed"
+    "db:seed": "npx ts-node -r dotenv/config ./node_modules/typeorm-seeding/dist/cli.js seed"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
