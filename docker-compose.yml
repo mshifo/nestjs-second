@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile.dev
     volumes:
@@ -17,15 +17,12 @@ services:
       sh -c "yarn db:seed && yarn start:dev"
 
   db:
-    image: mysql:5.7
+    image: mysql:latest
     volumes:
       - db_data:/var/lib/mysql
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: testdb
-      MYSQL_USER: testuser
-      MYSQL_PASSWORD: testpass
+    env_file:
+      - .env
     expose:
       - 3306
 
