@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -10,11 +11,14 @@ import { User } from 'src/users/entities/user.entity';
 import { UserRepository } from 'src/users/users.repository';
 import { SignInDto } from '../dto/signIn.dto';
 import { SignUpDto } from '../dto/SignUp.dto';
+import { MailService } from 'src/mail/mail.service';
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
   constructor(
     private userRepository: UserRepository,
     private jwtService: JwtService,
+    private mailService: MailService,
   ) { }
 
   async validateUser(signInDto: SignInDto): Promise<User> {
@@ -47,6 +51,9 @@ export class AuthService {
 
     try {
       await this.userRepository.save(user);
+      const token = Math.floor(1000 + Math.random() * 9000).toString();
+      const sent = await this.mailService.sendUserConfirmation(user, token);
+      this.logger.verbose(`Email Sent to ${user.email} and response is`, sent);
     } catch (error) {
       if (error.code == 'ER_DUP_ENTRY') {
         throw new ConflictException('Username or Email already exists');

@@ -15,4 +15,17 @@ export default () => ({
     synchronize: process.env.NODE_ENV == 'production' ? false : true,
     entities: [__dirname + '/../**/*.entity.{ts,js}'],
   },
+  mail: {
+    transport: {
+      host: process.env.MAIL_HOST,
+      secure: false,
+      auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASSWORD,
+      },
+    },
+    defaults: {
+      from: `"No Reply" <${process.env.MAIL_FROM}>`,
+    },
+  },
 });

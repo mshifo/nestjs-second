@@ -9,9 +9,9 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY yarn.lock ./
 
-RUN yarn
+RUN npm i --legacy-peer-deps
 # If you are building your code for production
-# RUN yarn install --frozen-lockfile --only=production
+# RUN npm ci --only=production
 
 # Bundle app source
 COPY . .
