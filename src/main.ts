@@ -3,9 +3,12 @@ import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as serveStatic from 'serve-static';
+import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use('/uploads', serveStatic(join(__dirname, '..', 'uploads'))); // Serve static files from the 'uploads' directory
   app.setGlobalPrefix('api');
   app.enableCors();
   app.useGlobalPipes(

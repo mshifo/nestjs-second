@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { UserStatuses } from '../enums/user-status.enum';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { MinLength } from 'class-validator';
 @Entity({ name: 'users' })
 export class User {
@@ -20,13 +20,14 @@ export class User {
   username: string;
 
   @MinLength(User.passwordMinLength)
-  @Exclude({ toPlainOnly: true })
+  @Exclude()
   @Column({ select: false })
   password: string;
 
   @Column({ length: 99 })
   name: string;
 
+  @Exclude()
   @Column()
   avatar?: string;
 
@@ -39,6 +40,7 @@ export class User {
   @Column({ default: UserStatuses.NOT_ACTIVE })
   status?: string;
 
+  @Exclude()
   @Column()
   salt?: string;
 
@@ -47,6 +49,11 @@ export class User {
 
   @DeleteDateColumn()
   deletedAt?: Date;
+
+  @Expose()
+  get avatar_url(): string | null {
+    return this.avatar ? `${process.env.APP_URL}/${this.avatar}` : null;
+  }
 
   async validatePassword?(password: string): Promise<boolean> {
     const hash = bcrypt.hash(password, this.salt);
