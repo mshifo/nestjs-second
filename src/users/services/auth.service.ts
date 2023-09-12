@@ -39,7 +39,10 @@ export class AuthService {
     };
   }
 
-  async signUp(signUpDto: SignUpDto): Promise<void> {
+  async signUp(
+    signUpDto: SignUpDto,
+    avatar: Express.Multer.File,
+  ): Promise<void> {
     const { name, username, email, password, phone } = signUpDto;
     const user = new User();
     user.name = name;
@@ -48,6 +51,7 @@ export class AuthService {
     user.phone = phone;
     user.salt = await bcrypt.genSalt();
     user.password = await this.hashPassword(password, user.salt);
+    user.avatar = avatar?.path;
 
     try {
       await this.userRepository.save(user);

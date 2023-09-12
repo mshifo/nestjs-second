@@ -27,6 +27,9 @@ export class User {
   @Column({ length: 99 })
   name: string;
 
+  @Column()
+  avatar?: string;
+
   @Column({ unique: true })
   email: string;
 
