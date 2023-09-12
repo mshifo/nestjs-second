@@ -14,7 +14,7 @@ services:
     depends_on:
       - db
     command: >
-      sh -c "yarn db:seed && yarn start:dev"
+      sh -c "npm run db:seed && npm run start:dev"
 
   db:
     image: mysql:latest

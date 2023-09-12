@@ -1,4 +1,4 @@
-import { define } from 'typeorm-seeding';
+import { define } from '@mshifo/typeorm-seeding';
 import { faker } from '@faker-js/faker';
 import { User } from '../../users/entities/user.entity';
 import * as bcrypt from 'bcrypt';

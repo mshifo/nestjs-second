@@ -1,4 +1,4 @@
-import { Factory, Seeder } from 'typeorm-seeding';
+import { Factory, Seeder } from '@mshifo/typeorm-seeding';
 import { Connection } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Seeder as SeederEntity } from '../seeder.entity';
