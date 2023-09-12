@@ -11,6 +11,7 @@ import {
   Patch,
   UseInterceptors,
   ClassSerializerInterceptor,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from '../services/users.service';
@@ -19,13 +20,14 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { User } from '../entities/user.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { ApiTags } from '@nestjs/swagger';
+import { GetUsersDto } from '../dto/get-users.dto';
 
 @Controller('users')
 @UseGuards(AuthGuard('jwt'))
 @ApiTags('Users')
 export class UsersController {
   private readonly logger = new Logger(UsersController.name);
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
@@ -34,9 +36,19 @@ export class UsersController {
 
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
-  findAll(): Promise<User[]> {
+  async findAll(
+    @Query() getUsersDto: GetUsersDto,
+  ): Promise<{ users: User[]; total: number; page: number; limit: number }> {
+    const { limit, page } = getUsersDto;
+
     this.logger.verbose('fetching users data');
-    return this.usersService.findAll();
+    const [users, total] = await this.usersService.findAll(limit, page);
+    return {
+      users,
+      total,
+      page,
+      limit,
+    };
   }
 
   @Get(':id')

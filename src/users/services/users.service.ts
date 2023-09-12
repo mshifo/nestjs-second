@@ -15,7 +15,7 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 export class UsersService {
   constructor(
     @InjectRepository(UserRepository) private userRepository: UserRepository,
-  ) { }
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const newUser = this.userRepository.create({
@@ -32,8 +32,11 @@ export class UsersService {
     }
   }
 
-  async findAll() {
-    return await this.userRepository.find();
+  async findAll(limit: number, page: number) {
+    return await this.userRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+    });
   }
 
   async findOne(id: number): Promise<User> {
