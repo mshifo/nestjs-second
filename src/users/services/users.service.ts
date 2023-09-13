@@ -10,6 +10,7 @@ import { UserRepository } from '../users.repository';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { User } from '../entities/user.entity';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { DeleteResult, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -32,7 +33,7 @@ export class UsersService {
     }
   }
 
-  async findAll(limit: number, page: number) {
+  async findAll(limit: number, page: number): Promise<[User[], number]> {
     return await this.userRepository.findAndCount({
       skip: (page - 1) * limit,
       take: limit,
@@ -55,7 +56,10 @@ export class UsersService {
     return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UpdateResult> {
     try {
       return await this.userRepository.update(id, updateUserDto);
     } catch (error) {
@@ -66,7 +70,7 @@ export class UsersService {
     }
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<DeleteResult> {
     return await this.userRepository.softDelete(id);
   }
 }

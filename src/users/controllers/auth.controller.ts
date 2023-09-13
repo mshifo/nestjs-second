@@ -23,7 +23,7 @@ import { extname } from 'path';
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('sign-in')
@@ -36,7 +36,7 @@ export class AuthController {
   @UseInterceptors(
     FileInterceptor('avatar', {
       storage: diskStorage({
-        destination: './uploads', // Destination to store images
+        destination: './uploads',
         filename: (req, file, callback) => {
           const name = file.originalname.split('.')[0];
           const fileExtName = extname(file.originalname);

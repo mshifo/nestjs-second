@@ -55,15 +55,15 @@ export class AuthService {
 
     try {
       await this.userRepository.save(user);
-      const token = Math.floor(1000 + Math.random() * 9000).toString();
-      const sent = await this.mailService.sendUserConfirmation(user, token);
-      this.logger.verbose(`Email Sent to ${user.email} and response is`, sent);
     } catch (error) {
       if (error.code == 'ER_DUP_ENTRY') {
         throw new ConflictException('Username or Email already exists');
       }
       throw new InternalServerErrorException(error.message);
     }
+    const token = Math.floor(1000 + Math.random() * 9000).toString();
+    const sent = await this.mailService.sendUserConfirmation(user, token);
+    this.logger.verbose(`Email Sent to ${user.email} and response is`, sent);
   }
 
   private async hashPassword(password: string, salt: string): Promise<string> {
