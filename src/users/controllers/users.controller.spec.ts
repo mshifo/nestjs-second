@@ -3,6 +3,7 @@ import { UsersController } from './users.controller';
 import { UsersService } from '../services/users.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { GetUsersDto } from '../dto/get-users.dto';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -16,7 +17,7 @@ describe('UsersController', () => {
           provide: UsersService,
           useValue: {
             create: jest.fn(),
-            findAll: jest.fn(),
+            findAll: jest.fn().mockResolvedValue([[], 0]),
             findOne: jest.fn(),
             update: jest.fn(),
             remove: jest.fn(),
@@ -43,8 +44,9 @@ describe('UsersController', () => {
 
   describe('findAll', () => {
     it('should call findAll method', async () => {
-      await controller.findAll();
-      expect(service.findAll).toBeCalled();
+      const dto = new GetUsersDto();
+      const { page, limit } = await controller.findAll(dto);
+      expect(service.findAll).toBeCalledWith(limit, page);
     });
   });
 

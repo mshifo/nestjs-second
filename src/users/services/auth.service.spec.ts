@@ -8,6 +8,7 @@ import { User } from '../entities/user.entity';
 import { SignInDto } from '../dto/signIn.dto';
 import { SignUpDto } from '../dto/SignUp.dto';
 import { Repository } from 'typeorm';
+import { MailService } from 'src/mail/mail.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -27,6 +28,12 @@ describe('AuthService', () => {
           provide: JwtService,
           useValue: {
             sign: jest.fn(() => 'token'),
+          },
+        },
+        {
+          provide: MailService,
+          useValue: {
+            sendUserConfirmation: jest.fn(),
           },
         },
       ],
@@ -107,7 +114,7 @@ describe('AuthService', () => {
       phone: '1234567890',
     } as SignUpDto;
 
-    await service.signUp(signUpDto);
+    await service.signUp(signUpDto, null);
 
     expect(userRepository.save).toHaveBeenCalledWith({
       name: 'John',
@@ -132,7 +139,7 @@ describe('AuthService', () => {
       phone: '1234567890',
     } as SignUpDto;
 
-    await expect(service.signUp(signUpDto)).rejects.toThrowError(
+    await expect(service.signUp(signUpDto, null)).rejects.toThrowError(
       ConflictException,
     );
   });

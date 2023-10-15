@@ -53,9 +53,11 @@ describe('UsersService', () => {
   });
 
   it('should find all users', async () => {
-    jest.spyOn(repo, 'find').mockResolvedValue([]);
-    const users = await service.findAll();
-    expect(users).toEqual([]);
+    jest.spyOn(repo, 'findAndCount').mockResolvedValue([[], 0]);
+    const limit = 10;
+    const page = 1;
+    const users = await service.findAll(limit, page);
+    expect(users).toEqual([[], 0]);
   });
 
   it('should find user by id', async () => {

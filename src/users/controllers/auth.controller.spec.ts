@@ -44,9 +44,9 @@ describe('AuthController', () => {
   it('should call signUp', async () => {
     const signUpDto = new SignUpDto();
 
-    controller.signUp(signUpDto);
+    controller.signUp(signUpDto, null);
 
-    expect(service.signUp).toHaveBeenCalledWith(signUpDto);
+    expect(service.signUp).toHaveBeenCalledWith(signUpDto, null);
   });
 
   it('should get user profile', async () => {
