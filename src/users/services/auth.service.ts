@@ -61,9 +61,9 @@ export class AuthService {
       }
       throw new InternalServerErrorException(error.message);
     }
-    const token = Math.floor(1000 + Math.random() * 9000).toString();
-    const sent = await this.mailService.sendUserConfirmation(user, token);
-    this.logger.verbose(`Email Sent to ${user.email} and response is`, sent);
+    //const token = Math.floor(1000 + Math.random() * 9000).toString();
+    //const sent = await this.mailService.sendUserConfirmation(user, token);
+    //this.logger.verbose(`Email Sent to ${user.email} and response is`, sent);
   }
 
   private async hashPassword(password: string, salt: string): Promise<string> {

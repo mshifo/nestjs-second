@@ -28,7 +28,7 @@ export class User {
   name: string;
 
   @Exclude()
-  @Column()
+  @Column({ default: null })
   avatar?: string;
 
   @Column({ unique: true })

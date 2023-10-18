@@ -5,17 +5,21 @@ import { AppModule } from 'src/app.module';
 import { User } from 'src/users/entities/user.entity';
 import { UserRepository } from 'src/users/users.repository';
 import { In } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { GetUsersDto } from 'src/users/dto/get-users.dto';
 
-describe('AuthController (e2e)', () => {
+describe('UserController (e2e)', () => {
   let app: INestApplication;
   let userRepo: UserRepository;
-  let accessToken;
+  let accessToken: string;
   let userId;
+  const salt = bcrypt.genSaltSync(10);
 
   const userToAdd: User = {
     name: 'Mahmoud',
     username: 'test89*5',
-    password: '123456789',
+    password: bcrypt.hashSync('12345678', salt),
+    salt,
     email: 'test89@test.com',
     phone: '896522',
     avatar_url: '',
@@ -24,7 +28,8 @@ describe('AuthController (e2e)', () => {
   const anotherUserToAdd: User = {
     name: 'Mahmoud',
     username: 'test7893#',
-    password: '123456789',
+    password: bcrypt.hashSync('12345678', salt),
+    salt,
     email: 'test7893@test.com',
     phone: '896522',
     avatar_url: '',
@@ -40,7 +45,26 @@ describe('AuthController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
     app.setGlobalPrefix('api');
+
+    accessToken = await getAccessToken();
   });
+
+  const AddUser = async () => {
+    const newUser = userRepo.create(anotherUserToAdd);
+    await userRepo.save(newUser);
+  };
+
+  const getAccessToken = async () => {
+    AddUser();
+    const { username, password } = anotherUserToAdd;
+    const { body } = await request(app.getHttpServer())
+      .post('/auth/sign-in')
+      .send({
+        username,
+        password,
+      });
+    return body.access_token;
+  };
 
   const deleteUser = async () => {
     await userRepo.delete({
@@ -57,21 +81,23 @@ describe('AuthController (e2e)', () => {
     const { body } = await request(app.getHttpServer())
       .post('/users')
       .set('Authorization', `Bearer ${accessToken}`)
-      .send(anotherUserToAdd)
+      .send(userToAdd)
       .expect(201);
 
     userId = body.id;
     expect(userId).toBeDefined();
-    expect(body.username).toEqual(anotherUserToAdd.username);
+    expect(body.username).toEqual(userToAdd.username);
   });
 
   it('GET /users - should get all users', async () => {
+    const getUsersDto = new GetUsersDto();
     return request(app.getHttpServer())
       .get('/users')
       .set('Authorization', `Bearer ${accessToken}`)
+      .query(getUsersDto)
       .expect(200)
       .expect((res) => {
-        expect(res.body.length).toBeGreaterThan(0);
+        expect(res.body.users.length).toBeGreaterThan(0);
       });
   });
 
